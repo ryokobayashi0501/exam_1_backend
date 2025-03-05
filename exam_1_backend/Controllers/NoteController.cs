@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using exam_1_backend.Models;
 using exam_1_backend.Data;
+using Microsoft.Extensions.FileProviders;
 
 namespace exam_1_backend.Controllers
 {
@@ -56,6 +57,24 @@ namespace exam_1_backend.Controllers
 
                 nc.SaveChanges();
                 return Ok(note);
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteSting(long id)
+        {
+            using (NoteContext nc = new NoteContext())
+            {
+                var note = nc.Note.FirstOrDefault(n => n.NoteId == id);
+
+                if(note == null)
+                {
+                    return BadRequest($"Note with id {id} not found.");
+                }
+
+                nc.Note.Remove(note);
+                nc.SaveChanges();
+                return NoContent();
             }
         }
     }
